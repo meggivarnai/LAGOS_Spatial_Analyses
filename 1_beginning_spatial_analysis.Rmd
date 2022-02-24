@@ -30,14 +30,11 @@ library(USAboundaries) #USA states and counties
 # #Lagos download script
 LAGOSNE::lagosne_get(dest_folder = LAGOSNE:::lagos_path())
 
-
 #Load in lagos
 lagos <- lagosne_load()
 
 #Grab the lake centroid info
 lake_centers <- lagos$locus
-
-
 
 ```
 
@@ -54,9 +51,10 @@ lake_centers <- lagos$locus
 #View the full dataset
 #View(lake_centers %>% slice(1:100))
 
+#st_as_sf, takes table and makes into spatial objects
 spatial_lakes <- st_as_sf(lake_centers,coords=c('nhd_long','nhd_lat'),
-                          crs=4326) %>%
-  st_transform(2163)
+                          crs=4326) %>% #crs is projection system. diff codes
+                          st_transform(2163) #transforming projection for map view
 
 #Subset for plotting
 subset_spatial <- spatial_lakes %>%
@@ -99,18 +97,31 @@ minnesota_lakes %>%
 ## 1) Show a map outline of Iowa and Illinois (similar to Minnesota map upstream)
 
 ```{r}
+Iowa <- states %>%
+  filter(name == 'Iowa') %>%
+  st_transform(2163)
 
+Illinois <- states %>%
+  filter(name == 'Illinois') %>%
+  st_transform(2163)
 
-
+maps <- rbind(Iowa,Illinois)
+mapview(maps)
 ```
 
 
 
-## 2) Subset LAGOS data to these sites, how many sites are in Illinois and Iowa
-combined? How does this compare to Minnesota?
+## 2) Subset LAGOS data to these sites, how many sites are in Illinois and Iowa combined? How does this compare to Minnesota?
 
 ```{r}
+Iowa <- states %>%
+  filter(name == 'Iowa') %>%
+  st_transform(2163)
 
+minnesota_lakes <- spatial_lakes[minnesota,]
+
+Illinois <- states %>%
+  filter(name == 'Illinois')
 ```
 
 
@@ -125,15 +136,13 @@ y axis (check out geom_histogram)
 ```
 
 
-## 4) Make an interactive plot of lakes in Iowa and Illinois and color them
-by lake area in hectares
+## 4) Make an interactive plot of lakes in Iowa and Illinois and color them by lake area in hectares
 
 ```{r}
 
 ```
 
 
-## 5) What other data sources might we use to understand how reservoirs and 
-natural lakes vary in size in these three states? 
+## 5) What other data sources might we use to understand how reservoirs and natural lakes vary in size in these three states? 
 
 
