@@ -24,7 +24,7 @@ library(lubridate) #For dealing with date and time
 
 
 ### First download and then specifically grab the locus (or site lat longs)
-```{r data-read}
+```{r data-read, warning=FALSE}
 #Lagos download script
 #lagosne_get(dest_folder = LAGOSNE:::lagos_path(),overwrite=T)
 
@@ -124,22 +124,28 @@ mapview(mean_spatial,zcol='log10_mean_chl')
 
 - Here, I just want a plot of chla vs secchi for all sites 
 
-```{r}
-#Your code here
-
+```{r warning=FALSE}
+ggplot(chla_secchi_200, aes(x=chla, y=secchi))+
+  geom_point(shape=1)+
+  scale_x_log10()+
+  scale_y_log10()+
+  labs(title = "Secchi Disk Depth vs Chlorophyll")
+  
 ```
 
-
 ## Why might this be the case? 
-
+A: The more chlorophyll there is the more turbid the water is therefore we have less clarity the deeper the secchi disk goes.
 
 ## 2) What states have the most data? 
 
 ### 2a) First you will need to make a lagos spatial dataset that has the total number of counts per site.
 
 ```{r}
+counts <- spatial_lakes %>%
+  group_by(lagoslakeid) %>%
+  summarise(count=n()) #mutate doesnt combine id
 
-
+spatial_counts
 ```
 
 
@@ -165,4 +171,4 @@ mapview(mean_spatial,zcol='log10_mean_chl')
 
 ```
 
-
+A: 
