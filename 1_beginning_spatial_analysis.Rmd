@@ -15,6 +15,7 @@ library(sf) #Spatial package that can read and create shapefiles
 library(mapview) #Interactive maps
 library(LAGOSNE) #Lots and lots of clean lake data
 library(USAboundaries) #USA states and counties
+library(ggthemes)
 ```
 
 
@@ -26,7 +27,7 @@ library(USAboundaries) #USA states and counties
 
 ### First download and then specifically grab the locus (or site lat longs)
 
-```{r data-read}
+```{r data-read, warning=FALSE}
 # #Lagos download script
 LAGOSNE::lagosne_get(dest_folder = LAGOSNE:::lagos_path())
 
@@ -97,6 +98,7 @@ minnesota_lakes %>%
 ## 1) Show a map outline of Iowa and Illinois (similar to Minnesota map upstream)
 
 ```{r}
+#filtering out the states of interest
 Iowa <- states %>%
   filter(name == 'Iowa') %>%
   st_transform(2163)
@@ -105,6 +107,7 @@ Illinois <- states %>%
   filter(name == 'Illinois') %>%
   st_transform(2163)
 
+#combining the two states and mapping them
 maps <- rbind(Iowa,Illinois)
 mapview(maps)
 ```
@@ -114,16 +117,12 @@ mapview(maps)
 ## 2) Subset LAGOS data to these sites, how many sites are in Illinois and Iowa combined? How does this compare to Minnesota?
 
 ```{r}
-Iowa <- states %>%
-  filter(name == 'Iowa') %>%
-  st_transform(2163)
+iowa_lakes<-spatial_lakes[Iowa,]
 
-minnesota_lakes <- spatial_lakes[minnesota,]
+illinois_lakes <- spatial_lakes[Illinois,]
 
-Illinois <- states %>%
-  filter(name == 'Illinois')
 ```
-
+A: There are 4,644 lakes in Iowa, and 11,822 lakes in Illinois for a combined total of 16,466 lakes. Minnesota has 29,038 lakes, almost double the amount in Iowa and Illinois. 
 
 ## 3) What is the distribution of lake size in Iowa vs. Minnesota?
 
@@ -131,14 +130,29 @@ Illinois <- states %>%
 y axis (check out geom_histogram)
 
 ```{r}
-
-
+lakes_histogram<- iowa_lakes %>%
+  ggplot(aes(x=lake_area_ha))+
+  geom_histogram(bins=20,
+                 fill="cadetblue3",
+                 color= "cadetblue4",
+                 alpha=0.5)+
+  scale_x_log10()+
+  theme_few()+
+  labs(x= 'Area (ha)', y= 'Count',title="Iowa Lake Size Histogram")
+ 
+print(lakes_histogram)
 ```
 
 
 ## 4) Make an interactive plot of lakes in Iowa and Illinois and color them by lake area in hectares
 
 ```{r}
+Iowa_Illinois_lakes <- rbind(iowa_lakes,illinois_lakes) 
+
+Iowa_Illinois_lakes %>%
+  arrange(-lake_area_ha) %>%
+  slice(1:1000) %>%
+  mapview(.,zcol='lake_area_ha')
 
 ```
 
