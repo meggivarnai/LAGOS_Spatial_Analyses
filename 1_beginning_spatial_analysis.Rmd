@@ -1,7 +1,7 @@
 ---
 title: "LAGOS Spatial Analysis"
-author: "Matthew Ross"
-date: "9/11/2019"
+author: "Meggi Varnai"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -16,6 +16,7 @@ library(mapview) #Interactive maps
 library(LAGOSNE) #Lots and lots of clean lake data
 library(USAboundaries) #USA states and counties
 library(ggthemes)
+library(ggpubr)
 ```
 
 
@@ -130,17 +131,27 @@ A: There are 4,644 lakes in Iowa, and 11,822 lakes in Illinois for a combined to
 y axis (check out geom_histogram)
 
 ```{r}
-lakes_histogram<- iowa_lakes %>%
+iowa_size <- iowa_lakes %>%
   ggplot(aes(x=lake_area_ha))+
   geom_histogram(bins=20,
                  fill="cadetblue3",
-                 color= "cadetblue4",
+                 color= "lightblue3",
                  alpha=0.5)+
   scale_x_log10()+
   theme_few()+
   labs(x= 'Area (ha)', y= 'Count',title="Iowa Lake Size Histogram")
- 
-print(lakes_histogram)
+
+illinois_size <- illinois_lakes %>%
+  ggplot(aes(x=lake_area_ha))+
+  geom_histogram(bins=20,
+                 fill="cadetblue3",
+                 color= "lightblue3",
+                 alpha=0.5)+
+  scale_x_log10()+
+  theme_few()+
+  labs(x= 'Area (ha)', y= 'Count',title="Illinois Lake Size Histogram")
+
+ggarrange(iowa_size,illinois_size, ncol=1, nrow=2)
 ```
 
 

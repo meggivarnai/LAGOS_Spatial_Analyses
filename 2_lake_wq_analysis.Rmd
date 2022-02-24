@@ -1,7 +1,7 @@
 ---
 title: "Lake Water Quality Analysis"
-author: "Matthew Ross"
-date: "9/17/2019"
+author: "Meggi Varnai"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output: html_document
 ---
 
@@ -120,8 +120,7 @@ mapview(mean_spatial,zcol='log10_mean_chl')
 
 # Class work
 
-## 1) What is the correlation between Secchi Disk Depth and Chlorophyll a for
-sites with at least 200 observations?
+## 1) What is the correlation between Secchi Disk Depth and Chlorophyll a for sites with at least 200 observations?
 
 - Here, I just want a plot of chla vs secchi for all sites 
 
@@ -136,35 +135,33 @@ sites with at least 200 observations?
 
 ## 2) What states have the most data? 
 
-### 2a) First you will need to make a lagos spatial dataset that has the total 
-number of counts per site.
+### 2a) First you will need to make a lagos spatial dataset that has the total number of counts per site.
 
 ```{r}
 
-## Your code here
+
 ```
 
 
-### 2b) Second, you will need to join this point dataset to the us_boundaries 
-data. 
+### 2b) Second, you will need to join this point dataset to the us_boundaries data. 
 
 ```{r}
-## Your code here
+
+
 ```
 
 
-### 2c) Then you will want to group by state and sum all the observations in that
-state and arrange that data from most to least toatl observations per state. 
+### 2c) Then you will want to group by state and sum all the observations in that state and arrange that data from most to least toatl observations per state. 
 
 ```{r}
-## Your code here. 
+
+ 
 ```
 
-##3 Is there a spatial pattern in Secchi disk depth for lakes with at least 200 
-observations?
+##3 Is there a spatial pattern in Secchi disk depth for lakes with at least 200 observations?
 
 ```{r}
-## Your code here
+
 
 ```
 
