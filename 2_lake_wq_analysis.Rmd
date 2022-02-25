@@ -134,41 +134,60 @@ ggplot(chla_secchi_200, aes(x=chla, y=secchi))+
 ```
 
 ## Why might this be the case? 
-A: The more chlorophyll there is the more turbid the water is therefore we have less clarity the deeper the secchi disk goes.
+A: The more chlorophyll there is the more light they absorb and more turbid the water is, therefore we have less clarity the deeper the secchi disk goes.
 
 ## 2) What states have the most data? 
 
 ### 2a) First you will need to make a lagos spatial dataset that has the total number of counts per site.
 
 ```{r}
-counts <- spatial_lakes %>%
+site_counts <- nutr %>%
   group_by(lagoslakeid) %>%
-  summarise(count=n()) #mutate doesnt combine id
+  summarise(count=n()) #mutate doesnt combine id, summarise does!
 
-spatial_counts
+spatial_counts<-inner_join(spatial_lakes,site_counts %>%
+                        distinct(lagoslakeid,.keep_all=TRUE),
+                      by = "lagoslakeid")
 ```
 
 
 ### 2b) Second, you will need to join this point dataset to the us_boundaries data. 
 
 ```{r}
+lake_states <- lagos$state
 
-
+lake_states_counts <- inner_join(spatial_counts, lake_states,
+                                 by="state_zoneid")
 ```
 
 
-### 2c) Then you will want to group by state and sum all the observations in that state and arrange that data from most to least toatl observations per state. 
+### 2c) Then you will want to group by state and sum all the observations in that state and arrange that data from most to least total observations per state. 
 
 ```{r}
-
+sum_states <- lake_states_counts %>%
+  as.data.frame() %>%
+  select(-geometry) %>% 
+  group_by(state_name) %>%
+ summarize(sum_counts = sum(count)) %>%
+ arrange(desc(sum_counts))
  
+head(sum_states)
+tail(sum_states)
 ```
+
+A: Minnesota has the most observations (358009), and New Jersey has the least observations (600).
 
 ##3 Is there a spatial pattern in Secchi disk depth for lakes with at least 200 observations?
 
 ```{r}
+adding_secchi <- mean_values_200 %>%
+  mutate(log10_mean_secchi = log10(mean_secchi))
 
+secchi_map <- inner_join(spatial_lakes,adding_secchi,
+                        by='lagoslakeid')
+
+mapview(secchi_map,zcol='log10_mean_secchi')
 
 ```
 
-A: 
+A: No clear pattern, we can see clumps of lakes with similar values, possibly due to reservoirs and lakes that have higher interest/impact on local area.  
