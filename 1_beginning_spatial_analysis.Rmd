@@ -170,5 +170,5 @@ Iowa_Illinois_lakes %>%
 
 ## 5) What other data sources might we use to understand how reservoirs and natural lakes vary in size in these three states? 
 
-A: A dataset with lake inflows and outflows would be beneficial in understanding how much water moves through the system and could potentially bypass remote sensing for maximum and average depth. 
+A: A dataset with lake depths would be beneficial when looking at lake size. This could potentially include the maximum, minimum, and average depth and would give us better information to the volume these lakes hold. 
 
